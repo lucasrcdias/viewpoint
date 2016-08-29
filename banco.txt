@@ -1,0 +1,22 @@
+drop database viewpoint;
+create database viewpoint;
+use viewpoint;
+
+
+create table users
+(
+id_user int primary key auto_increment,
+email_user varchar(60) not null unique,
+api_key varchar(60) not null unique,
+created_at datetime
+);
+
+create table actions
+(
+id_action int primary key auto_increment,
+name_action varchar(60) not null,
+date_action datetime not null,
+group_action varchar(60) not null, 
+features_action varchar(100) not null,
+id_user int references users(id_user)
+);
