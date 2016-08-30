@@ -24,19 +24,16 @@ public class Action {
 	@Column(name = "id_action")
 	private Long id;
 
-	@Column(name = "name_action", unique = true, length = 60, nullable = false)
+	@Column(name = "name", unique = true, length = 60, nullable = false)
 	private String name;
 
-	@Column(name = "date_action", nullable = false)
-	private Date date;
+	@Column(name = "date", nullable = false)
+	private Date date = new Date();
 
-	@Column(name = "group_action", unique = true, length = 60, nullable = false)
-	private String group;
-	
-	@Column(name = "features_action", unique = true, length = 100, nullable = false)
+	@Column(name = "features", unique = true, length = 100, nullable = false)
 	private String features;
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "id_user", nullable = true)
 	private User user;
 
@@ -78,14 +75,6 @@ public class Action {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
 	}
 
 }
