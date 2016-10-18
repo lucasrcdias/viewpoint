@@ -5,10 +5,8 @@ import br.com.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -17,18 +15,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public User create(@RequestParam(required = true) String email) {
-        return getUserService().create(email);
+    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes =  MediaType.APPLICATION_JSON_VALUE)
+    public User create(@Validated @RequestBody UserDTO userDTO) {
+        return getUserService().create(userDTO.getEmail(), userDTO.getPassword(), userDTO.getPassword());
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public User update(@RequestParam(required = true) Long id, @RequestParam(required = true) String email)
-            throws NotFoundException {
-        return getUserService().update(id, email);
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public User update(@RequestParam(required = true) Long id,
+                       @RequestBody UserDTO userDTO) throws NotFoundException {
+        return getUserService().update(id, userDTO.getEmail(), userDTO.getPassword(), userDTO.getName());
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public void update(@RequestParam(required = true) Long id) throws NotFoundException {
         getUserService().delete(id);
     }
