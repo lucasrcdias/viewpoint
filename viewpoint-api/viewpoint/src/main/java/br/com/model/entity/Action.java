@@ -22,7 +22,7 @@ public class Action {
     @Column(name = "created_at", nullable = false)
     @JsonProperty
     private Date createdAt = new Date();
-    ;
+    
 
     @Column(name = "group_action", unique = true, length = 60, nullable = false)
     @JsonProperty
