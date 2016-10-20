@@ -5,8 +5,10 @@ use viewpoint;
 
 create table users
 (
-id_usu int primary key auto_increment,
-email varchar(60) not null unique,
+id_user int primary key auto_increment,
+email_user varchar(80) not null unique,
+password_user varchar(100) not null,
+name_user  varchar(60) not null,
 api_key varchar(150) not null unique,
 created_at datetime not null
 );
