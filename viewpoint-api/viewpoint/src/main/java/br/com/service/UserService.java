@@ -2,7 +2,6 @@ package br.com.service;
 
 import br.com.exceptions.BusinessException;
 import br.com.exceptions.UserNotFoundException;
-import br.com.BusinessException;
 import br.com.model.UserRepository;
 import br.com.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class UserService {
     public User create(String email, String password, String name) {
         User user = getUserRepository().findOneByEmail(email);
         if (user != null) {
-            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "O e-mail informado já está em uso, utilize o link para recuperação de senha");
+            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "email", "O e-mail informado já está em uso, utilize o link para recuperação de senha");
         }
         user = new User();
         user.setKey(createKey(email));
@@ -30,11 +29,12 @@ public class UserService {
         return getUserRepository().save(user);
     }
 
-    public User update(Long id, String email, String password, String name) {
+    public User update(Long id, String email, String password, String name, String token) {
         User user = getUserRepository().findOne(id);
         if (user == null) {
-            throw new UserNotFoundException("Usuário não encontrado.");
+            throw new UserNotFoundException("id", "Usuário não encontrado.");
         }
+        sameUserValidation(user, token);
         if (Objects.nonNull(email)) {
             user.setEmail(email);
             user.setKey(createKey(email));
@@ -48,12 +48,22 @@ public class UserService {
         return getUserRepository().save(user);
     }
 
-    public void delete(Long id) {
-        User userByKey = getUserRepository().findOne(id);
-        if (userByKey == null) {
-            throw new UserNotFoundException("Usuário não encontrado.");
+    private boolean sameUserValidation(User user, String token) {
+        User oneByKey = getUserRepository().findOneByKey(token);
+        boolean equals = oneByKey.getId().equals(user.getId());
+        if (!equals) {
+            throw new UserNotFoundException("id", "Id do usuário não é o mesmo do token enviado");
         }
-        getUserRepository().delete(userByKey);
+        return true;
+    }
+
+    public void delete(Long id, String token) {
+        User user = getUserRepository().findOne(id);
+        if (Objects.isNull(user)) {
+            throw new UserNotFoundException("id", "Usuário não encontrado.");
+        }
+        sameUserValidation(user, token);
+        getUserRepository().delete(user);
     }
 
     private String createKey(String email) {
@@ -79,7 +89,7 @@ public class UserService {
     public boolean authenticate(String authToken) {
         User user = findByKey(authToken);
         if (Objects.isNull(user)) {
-            throw new UserNotFoundException("Usuário não encontrado pela chave");
+            throw new UserNotFoundException("AUTH_TOKEN", "Usuário não encontrado pela chave");
         }
         return true;
     }

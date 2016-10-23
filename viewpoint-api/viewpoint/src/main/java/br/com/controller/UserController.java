@@ -1,5 +1,6 @@
 package br.com.controller;
 
+import br.com.HeaderParam;
 import br.com.model.entity.User;
 import br.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +15,21 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes =  MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public User create(@Validated @RequestBody UserDTO userDTO) {
         return getUserService().create(userDTO.getEmail(), userDTO.getPassword(), userDTO.getPassword());
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public User update(@RequestParam(required = true) Long id,
-                       @RequestBody UserDTO userDTO) {
-        return getUserService().update(id, userDTO.getEmail(), userDTO.getPassword(), userDTO.getName());
+    public User update(@RequestParam(required = true) Long id, @RequestBody UserDTO userDTO,
+                       @RequestHeader(name = HeaderParam.AUTH_TOKEN, required = false) String token) {
+        return getUserService().update(id, userDTO.getEmail(), userDTO.getPassword(), userDTO.getName(), token);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public void update(@RequestParam(required = true) Long id)  {
-        getUserService().delete(id);
+    public void update(@RequestParam(required = true) Long id,
+                       @RequestHeader(name = HeaderParam.AUTH_TOKEN, required = false) String token) {
+        getUserService().delete(id, token);
     }
 
     @RequestMapping(value = "/findByKey", method = RequestMethod.GET)

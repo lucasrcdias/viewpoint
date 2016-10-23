@@ -7,7 +7,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import java.util.Date;
 
 
@@ -20,20 +19,20 @@ public class User {
     @JsonProperty
     private Long id;
 
-    @Column(name = "email_user", unique = true, nullable = false)
+    @Column(name = "email_user", unique = true)
     @Length(max = 254, message = "O e-mail pode conter no máximo 254 caracteres")
     @JsonProperty
     @NotEmpty(message = "O preenchimento do e-mail é obrigatório")
     @Email
     private String email;
 
-    @Column(name = "password_user", nullable = false)
+    @Column(name = "password_user")
     @Length(min = 6, message = "A senha deve conter no mínimo 6 caracteres")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotEmpty(message = "O preenchimento da senha é obrigatório")
     private String password;
 
-    @Column(name = "name_user", nullable = false)
+    @Column(name = "name_user")
     @JsonProperty
     @Length(max = 60, message = "O nome deve conter no máximo 60 caracteres")
     @NotEmpty(message = "O preenchimento do nome é obrigatório")

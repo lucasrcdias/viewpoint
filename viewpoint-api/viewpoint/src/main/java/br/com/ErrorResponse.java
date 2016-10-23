@@ -2,17 +2,27 @@ package br.com;
 
 public class ErrorResponse  {
 
-    private String errorMessage;
+    private String field;
+    private String message;
 
-    public ErrorResponse(String message) {
-        this.setErrorMessage(message);
+    public ErrorResponse(String field,String message) {
+        this.setField(field);
+        this.message = message;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
     }
 }

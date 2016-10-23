@@ -12,8 +12,7 @@ import java.util.Objects;
 
 public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
-    //Header param that should be send by user
-    private static final String AUTH_TOKEN = "AUTH_TOKEN";
+
     private static final String CREATE_USER = "POST /api/user/create";
     private static final String[] SKIP_SECURITY = {CREATE_USER};
     private static final String EMPTY_HEADER_MESSAGE = "Header params {0} should not be null";
@@ -28,7 +27,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         if (shouldSkipVerification(request, SKIP_SECURITY))
             return true;
 
-        String authToken = request.getHeader(AUTH_TOKEN);
+        String authToken = request.getHeader(HeaderParam.AUTH_TOKEN);
         validateEmptyHeaders(authToken);
 
         return userService.authenticate(authToken);
@@ -36,8 +35,8 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
     void validateEmptyHeaders(String authorization) {
         if (!validParam(authorization)) {
-            String format = MessageFormat.format(EMPTY_HEADER_MESSAGE, AUTH_TOKEN);
-            throw new MissingHeaderParamException(format);
+            String errorMessage = MessageFormat.format(EMPTY_HEADER_MESSAGE, HeaderParam.AUTH_TOKEN);
+            throw new MissingHeaderParamException(HeaderParam.AUTH_TOKEN, errorMessage);
         }
     }
 
