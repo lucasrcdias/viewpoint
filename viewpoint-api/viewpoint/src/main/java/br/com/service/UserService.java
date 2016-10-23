@@ -19,7 +19,7 @@ public class UserService {
     public User create(String email, String password, String name) {
         User user = getUserRepository().findOneByEmail(email);
         if (user != null) {
-            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "the user has already registered");
+            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "O e-mail informado já está em uso, utilize o link para recuperação de senha");
         }
         user = new User();
         user.setKey(createKey(email));
@@ -32,7 +32,7 @@ public class UserService {
     public User update(Long id, String email, String password, String name) {
         User user = getUserRepository().findOne(id);
         if (user == null) {
-            throw new BusinessException(HttpStatus.NOT_FOUND, "User not found by id");
+            throw new BusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
         }
         if (Objects.nonNull(email)) {
             user.setEmail(email);

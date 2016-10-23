@@ -5,17 +5,17 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserDTO {
-    @NotEmpty(message = "O campo de email não deveria ser vazio")
-    @Email(message = "o campo de email não está em um formato correto")
-    @Length(max = 254, message = "O campo de email deve ter o tamanho até 254 caracteres")
+    @NotEmpty(message = "O preenchimento do e-mail é obrigatório")
+    @Email(message = "O e-mail informado não é válido")
+    @Length(max = 254, message = "O e-mail pode conter no máximo 254 caracteres")
     private String email;
 
-    @Length(min = 6, message = "O campo de senha deve ter o tamanho de no minimo 6 caracteres")
-    @NotEmpty(message = "o campo de senha não deveria ser vazio")
+    @Length(min = 6, message = "A senha deve conter no mínimo 6 caracteres")
+    @NotEmpty(message = "O preenchimento da senha é obrigatório")
     private String password;
 
-    @Length(max = 254, message = "O campo de naome deve ter o tamanho até 60 caracteres")
-    @NotEmpty(message = "O campo nome não deveria ser vazio")
+    @Length(max = 60, message = "O nome deve conter no máximo 60 caracteres")
+    @NotEmpty(message = "O preenchimento do nome é obrigatório")
     private String name;
 
     public String getEmail() {
