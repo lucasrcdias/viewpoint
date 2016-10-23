@@ -50,7 +50,7 @@ public class UserService {
     public void delete(Long id) {
         User userByKey = getUserRepository().findOne(id);
         if (userByKey == null) {
-            throw new BusinessException(HttpStatus.NOT_FOUND, "User not found by id");
+            throw new BusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
         }
         getUserRepository().delete(userByKey);
     }
