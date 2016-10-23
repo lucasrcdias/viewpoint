@@ -2,6 +2,7 @@ package br.com.service;
 
 import br.com.exceptions.BusinessException;
 import br.com.exceptions.UserNotFoundException;
+import br.com.BusinessException;
 import br.com.model.UserRepository;
 import br.com.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserService {
     public User create(String email, String password, String name) {
         User user = getUserRepository().findOneByEmail(email);
         if (user != null) {
-            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "Usuário já existe no sistema");
+            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "O e-mail informado já está em uso, utilize o link para recuperação de senha");
         }
         user = new User();
         user.setKey(createKey(email));
@@ -32,7 +33,7 @@ public class UserService {
     public User update(Long id, String email, String password, String name) {
         User user = getUserRepository().findOne(id);
         if (user == null) {
-            throw new UserNotFoundException("Usuário não encontrado por id");
+            throw new UserNotFoundException("Usuário não encontrado.");
         }
         if (Objects.nonNull(email)) {
             user.setEmail(email);
@@ -50,7 +51,7 @@ public class UserService {
     public void delete(Long id) {
         User userByKey = getUserRepository().findOne(id);
         if (userByKey == null) {
-            throw new UserNotFoundException("Usuário não encontrado por id");
+            throw new UserNotFoundException("Usuário não encontrado.");
         }
         getUserRepository().delete(userByKey);
     }
@@ -78,7 +79,7 @@ public class UserService {
     public boolean authenticate(String authToken) {
         User user = findByKey(authToken);
         if (Objects.isNull(user)) {
-            throw new UserNotFoundException("User not found by auth token");
+            throw new UserNotFoundException("Usuário não encontrado pela chave");
         }
         return true;
     }
