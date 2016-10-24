@@ -3,6 +3,7 @@ package br.com.model.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -19,26 +20,29 @@ public class User {
     @JsonProperty
     private Long id;
 
-    @Column(name = "email_user", unique = true, length = 60, nullable = false)
+    @Column(name = "email_user", unique = true, nullable = false)
+    @Length(max = 254, message = "O e-mail pode conter no máximo 254 caracteres")
     @JsonProperty
-    @NotEmpty(message = "the email field can not be empty")
+    @NotEmpty(message = "O preenchimento do e-mail é obrigatório")
     @Email
     private String email;
 
     @Column(name = "password_user", nullable = false)
-    @Min(value = 6)
+    @Length(min = 6, message = "A senha deve conter no mínimo 6 caracteres")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotEmpty(message = "the password field can not be empty")
+    @NotEmpty(message = "O preenchimento da senha é obrigatório")
     private String password;
 
     @Column(name = "name_user", nullable = false)
     @JsonProperty
-    @NotEmpty(message = "the name field can not be empty")
+    @Length(max = 60, message = "O nome deve conter no máximo 60 caracteres")
+    @NotEmpty(message = "O preenchimento do nome é obrigatório")
     private String name;
 
-    @Column(name = "api_key", unique = true, length = 150, nullable = false)
+    @Column(name = "api_key", unique = true, nullable = false)
     @JsonProperty
-    @NotEmpty(message = "the key field can not be empty")
+    @Length(max = 150)
+    @NotEmpty(message = "O campo da chave do usuário não pode ser vazio")
     private String key;
 
     @Column(name = "created_at", nullable = false)

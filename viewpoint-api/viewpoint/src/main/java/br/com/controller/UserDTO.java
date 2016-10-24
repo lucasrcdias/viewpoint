@@ -1,15 +1,21 @@
 package br.com.controller;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserDTO {
-    @NotEmpty(message = "the field email should not be empty")
+    @NotEmpty(message = "O preenchimento do e-mail é obrigatório")
+    @Email(message = "O e-mail informado não é válido")
+    @Length(max = 254, message = "O e-mail pode conter no máximo 254 caracteres")
     private String email;
 
-    @NotEmpty(message = "the field password should not be empty")
+    @Length(min = 6, message = "A senha deve conter no mínimo 6 caracteres")
+    @NotEmpty(message = "O preenchimento da senha é obrigatório")
     private String password;
 
-    @NotEmpty(message = "the field name should not be empty")
+    @Length(max = 60, message = "O nome deve conter no máximo 60 caracteres")
+    @NotEmpty(message = "O preenchimento do nome é obrigatório")
     private String name;
 
     public String getEmail() {

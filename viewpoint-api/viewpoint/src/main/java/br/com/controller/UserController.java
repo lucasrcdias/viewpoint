@@ -2,7 +2,6 @@ package br.com.controller;
 
 import br.com.model.entity.User;
 import br.com.service.UserService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -22,12 +21,12 @@ public class UserController {
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public User update(@RequestParam(required = true) Long id,
-                       @RequestBody UserDTO userDTO) throws NotFoundException {
+                       @RequestBody UserDTO userDTO) {
         return getUserService().update(id, userDTO.getEmail(), userDTO.getPassword(), userDTO.getName());
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public void update(@RequestParam(required = true) Long id) throws NotFoundException {
+    public void update(@RequestParam(required = true) Long id)  {
         getUserService().delete(id);
     }
 
