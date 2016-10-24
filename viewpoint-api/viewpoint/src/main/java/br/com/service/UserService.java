@@ -29,12 +29,11 @@ public class UserService {
         return getUserRepository().save(user);
     }
 
-    public User update(Long id, String email, String password, String name, String token) {
-        User user = getUserRepository().findOne(id);
+    public User update(String email, String password, String name, String token) {
+        User user = getUserRepository().findOneByKey(token);
         if (user == null) {
             throw new UserNotFoundException("id", "Usuário não encontrado.");
         }
-        sameUserValidation(user, token);
         if (Objects.nonNull(email)) {
             user.setEmail(email);
             user.setKey(createKey(email));
@@ -48,21 +47,12 @@ public class UserService {
         return getUserRepository().save(user);
     }
 
-    private boolean sameUserValidation(User user, String token) {
-        User oneByKey = getUserRepository().findOneByKey(token);
-        boolean equals = oneByKey.getId().equals(user.getId());
-        if (!equals) {
-            throw new UserNotFoundException("id", "Id do usuário não é o mesmo do token enviado");
-        }
-        return true;
-    }
 
-    public void delete(Long id, String token) {
-        User user = getUserRepository().findOne(id);
+    public void delete(String token) {
+        User user = getUserRepository().findOneByKey(token);
         if (Objects.isNull(user)) {
             throw new UserNotFoundException("id", "Usuário não encontrado.");
         }
-        sameUserValidation(user, token);
         getUserRepository().delete(user);
     }
 

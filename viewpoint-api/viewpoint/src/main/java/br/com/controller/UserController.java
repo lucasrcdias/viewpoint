@@ -17,19 +17,17 @@ public class UserController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public User create(@Validated @RequestBody UserDTO userDTO) {
-        return getUserService().create(userDTO.getEmail(), userDTO.getPassword(), userDTO.getPassword());
+        return getUserService().create(userDTO.getEmail(), userDTO.getPassword(), userDTO.getName());
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public User update(@RequestParam(required = true) Long id, @RequestBody UserDTO userDTO,
-                       @RequestHeader(name = HeaderParam.AUTH_TOKEN, required = false) String token) {
-        return getUserService().update(id, userDTO.getEmail(), userDTO.getPassword(), userDTO.getName(), token);
+    public User update(@RequestBody UserDTO userDTO, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) {
+        return getUserService().update(userDTO.getEmail(), userDTO.getPassword(), userDTO.getName(), token);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public void update(@RequestParam(required = true) Long id,
-                       @RequestHeader(name = HeaderParam.AUTH_TOKEN, required = false) String token) {
-        getUserService().delete(id, token);
+    public void delete(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) {
+        getUserService().delete(token);
     }
 
     @RequestMapping(value = "/findByKey", method = RequestMethod.GET)
