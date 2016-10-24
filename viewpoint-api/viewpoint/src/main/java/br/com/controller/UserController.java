@@ -3,6 +3,7 @@ package br.com.controller;
 import br.com.HeaderParam;
 import br.com.model.entity.User;
 import br.com.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -16,12 +17,12 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public User create(@Validated @RequestBody UserDTO userDTO) {
+    public User create(@Validated @RequestBody UserDTO userDTO) throws JsonProcessingException {
         return getUserService().create(userDTO.getEmail(), userDTO.getPassword(), userDTO.getName());
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public User update(@RequestBody UserDTO userDTO, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) {
+    public User update(@RequestBody UserDTO userDTO, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) throws JsonProcessingException {
         return getUserService().update(userDTO.getEmail(), userDTO.getPassword(), userDTO.getName(), token);
     }
 

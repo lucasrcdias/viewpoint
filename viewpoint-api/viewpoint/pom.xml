@@ -15,6 +15,7 @@
 		<org.springframework.data.version>1.9.2.RELEASE</org.springframework.data.version>
 		<org.hibernate.version>5.0.7.Final</org.hibernate.version>
 		<mysql.version>5.1.38</mysql.version>
+		<jjwt.version>0.6.0</jjwt.version>
 	</properties>
 
 	<dependencies>
@@ -120,6 +121,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jjwt.version}</version>
 		</dependency>
 	</dependencies>
 

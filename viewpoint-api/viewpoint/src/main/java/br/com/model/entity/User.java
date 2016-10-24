@@ -40,7 +40,7 @@ public class User {
 
     @Column(name = "api_key", unique = true, nullable = false)
     @JsonProperty
-    @Length(max = 150)
+    @Length(max = 500)
     @NotEmpty(message = "O campo da chave do usuário não pode ser vazio")
     private String key;
 
