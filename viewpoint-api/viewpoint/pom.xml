@@ -14,6 +14,7 @@
 		<org.springframework.version>4.2.4.RELEASE</org.springframework.version>
 		<org.springframework.data.version>1.9.2.RELEASE</org.springframework.data.version>
 		<org.hibernate.version>5.0.7.Final</org.hibernate.version>
+		<org.springframework.security.version>4.0.3.RELEASE</org.springframework.security.version>
 		<mysql.version>5.1.38</mysql.version>
 		<jjwt.version>0.6.0</jjwt.version>
 	</properties>
@@ -126,6 +127,18 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${jjwt.version}</version>
+		</dependency>
+
+		<!-- Spring security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${org.springframework.security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${org.springframework.security.version}</version>
 		</dependency>
 	</dependencies>
 
