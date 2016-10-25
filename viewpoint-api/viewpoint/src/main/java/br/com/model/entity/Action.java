@@ -1,6 +1,8 @@
 package br.com.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,25 +17,35 @@ public class Action {
     @JsonProperty
     private Long id;
 
-    @Column(name = "name_action", unique = true, length = 60, nullable = false)
+    @Column(name = "name_action")
     @JsonProperty
+    @Length(max = 60, message = "O nome do evento deve conter no máximo 60 caracteres")
+    @NotEmpty(message = "O preenchimento do nome do evento é obrigatório")
     private String name;
 
     @Column(name = "created_at", nullable = false)
     @JsonProperty
     private Date createdAt = new Date();
-    
 
-    @Column(name = "group_action", unique = true, length = 60, nullable = false)
+
+    @Column(name = "group_action")
     @JsonProperty
+    @Length(max = 60, message = "O grupo do evento deve conter no máximo 60 caracteres")
+    @NotEmpty(message = "O preenchimento do grupo do evento é obrigatório")
     private String group;
 
-    @Column(name = "parameters", unique = true, length = 100, nullable = false)
+    @Column(name = "parameters")
+    @Length(max = 400, message = "O parametros devem conter no máximo 400 caracteres")
     @JsonProperty
     private String parameters;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "id_usu", nullable = true)
+    @Column(name = "ip_action")
+    @JsonProperty
+    @Length(max = 40, message = "O ip que enviou o evento deve conter no máximo 40 caracteres")
+    private String ipAddress;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "id_usu")
     @JsonProperty
     private User user;
 
@@ -83,5 +95,13 @@ public class Action {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 }
