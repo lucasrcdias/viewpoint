@@ -2,8 +2,8 @@ package br.com.controller;
 
 import br.com.HeaderParam;
 import br.com.model.entity.Action;
-import br.com.model.entity.User;
 import br.com.service.ActionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +26,7 @@ public class ActionController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Action create(@Validated @RequestBody ActionDTO dto, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) {
+    public Action create(@Validated @RequestBody ActionDTO dto, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) throws JsonProcessingException {
         return getActionService().create(dto, token);
     }
 

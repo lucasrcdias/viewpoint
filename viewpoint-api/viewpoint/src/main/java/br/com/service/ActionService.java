@@ -4,6 +4,8 @@ import br.com.controller.ActionDTO;
 import br.com.model.ActionRepository;
 import br.com.model.entity.Action;
 import br.com.model.entity.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,9 @@ public class ActionService {
     private ActionRepository actionRepository;
     @Autowired
     private UserService userService;
+    ObjectMapper objectMapper = new ObjectMapper();
 
-
-    public Action create(ActionDTO dto, String token) {
+    public Action create(ActionDTO dto, String token) throws JsonProcessingException {
         User user = userService.findUserByToken(token);
         Action action = new Action();
         action.setUser(user);
@@ -27,7 +29,8 @@ public class ActionService {
         action.setGroup(dto.getGroup());
         action.setIpAddress(dto.getIp());
         if (Objects.nonNull(dto.getParameters())) {
-            action.setParameters(dto.getParameters().toString());
+            String json = objectMapper.writeValueAsString(dto.getParameters());
+            action.setParameters(json);
         }
         return actionRepository.save(action);
     }
