@@ -34,9 +34,10 @@ public class UserService {
     }
 
     public User update(String email, String password, String name, String token) throws JsonProcessingException {
-        User user = getUserRepository().findOneByKey(token);
+        String jwt = token.substring("Bearer ".length());
+        User user = getUserRepository().findOneByKey(jwt);
         if (Objects.isNull(user)) {
-            throw new UserNotFoundException("id", "Usuário não encontrado.");
+            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
         }
         if (Objects.nonNull(password)) {
             user.setEmail(password);
@@ -53,9 +54,10 @@ public class UserService {
 
 
     public void delete(String token) {
-        User user = getUserRepository().findOneByKey(token);
+        String jwt = token.substring("Bearer ".length());
+        User user = getUserRepository().findOneByKey(jwt);
         if (Objects.isNull(user)) {
-            throw new UserNotFoundException("id", "Usuário não encontrado.");
+            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
         }
         getUserRepository().delete(user);
     }
