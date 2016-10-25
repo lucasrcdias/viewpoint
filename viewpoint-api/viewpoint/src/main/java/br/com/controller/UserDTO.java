@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserDTO {
+
     @NotEmpty(message = "O preenchimento do e-mail é obrigatório")
     @Email(message = "O e-mail informado não é válido")
     @Length(max = 254, message = "O e-mail pode conter no máximo 254 caracteres")

@@ -1,6 +1,6 @@
 package br.com;
 
-import org.apache.commons.collections4.MapUtils;
+import br.com.exceptions.BusinessException;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -17,22 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice(annotations = RestController.class)
 public class ApiErrorHandler extends ResponseEntityExceptionHandler {
-
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                          HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), status);
+        return new ResponseEntity<>(new ErrorResponse(ex.getLocalizedMessage(), ex.getMessage()), status);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), status);
+        return new ResponseEntity<>(new ErrorResponse(ex.getLocalizedMessage(), ex.getMessage()), status);
     }
 
     @Override
@@ -43,49 +42,37 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(fieldErrorResponses, HttpStatus.BAD_REQUEST);
     }
 
+
     private List<FieldErrorResponse> buildErrorResponse(List<FieldError> fieldErrors) {
-        List<FieldErrorResponse> errorResponses = new ArrayList<>();
-        fieldErrors.forEach(fieldError -> {
-            FieldErrorResponse e = new FieldErrorResponse(fieldError.getField(), fieldError.getDefaultMessage());
-            errorResponses.add(e);
-        });
-        return errorResponses;
+        return fieldErrors.stream().map(o -> new FieldErrorResponse(o.getField(), o.getDefaultMessage())).collect(Collectors.toList());
     }
 
     @Override
     protected ResponseEntity<Object> handleConversionNotSupported(ConversionNotSupportedException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse(ex.getPropertyName(), ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
                                                         HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse(ex.getPropertyName(), ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
-            MissingServletRequestParameterException ex, HttpHeaders headers,
-            HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.BAD_REQUEST);
+            MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return new ResponseEntity<>(new ErrorResponse(ex.getParameterName(), ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<?> handleBusinessException(BusinessException e) {
-        ResponseEntity<ErrorResponse> responseEntity;
-        if (MapUtils.isEmpty(e.getHeaders())) {
-            responseEntity = new ResponseEntity<>(null, e.getHeaders(), e.getStatus());
-        } else {
-            responseEntity = new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getStatus());
-        }
-        return responseEntity;
+        return new ResponseEntity<>(new ErrorResponse(e.getField(), e.getMessage()), e.getStatus());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
-        return new ResponseEntity<>(new ErrorResponse("Unexpected error occurred"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ErrorResponse("Unexpected error occurred", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
