@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 @Configuration
 @ComponentScan(value = {"br.com"})
-public class BeanConfiguration  extends WebMvcConfigurationSupport {
+public class BeanConfiguration extends WebMvcConfigurationSupport {
 
     private static final String USER_API = "/api/user*/**";
     private static final String ACTION_USER = "/api/action*/**";
@@ -27,7 +27,7 @@ public class BeanConfiguration  extends WebMvcConfigurationSupport {
     public ActionService actionService() {
         return new ActionService();
     }
-    
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
