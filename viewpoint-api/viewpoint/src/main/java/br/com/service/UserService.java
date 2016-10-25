@@ -34,11 +34,7 @@ public class UserService {
     }
 
     public User update(String email, String password, String name, String token) throws JsonProcessingException {
-        String jwt = token.substring("Bearer ".length());
-        User user = getUserRepository().findOneByKey(jwt);
-        if (Objects.isNull(user)) {
-            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
-        }
+        User user = findUserByToken(token);
         if (Objects.nonNull(password)) {
             user.setEmail(password);
         }
@@ -52,13 +48,8 @@ public class UserService {
         return getUserRepository().save(user);
     }
 
-
     public void delete(String token) {
-        String jwt = token.substring("Bearer ".length());
-        User user = getUserRepository().findOneByKey(jwt);
-        if (Objects.isNull(user)) {
-            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
-        }
+        User user = findUserByToken(token);
         getUserRepository().delete(user);
     }
 
@@ -80,6 +71,15 @@ public class UserService {
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public User findUserByToken(String token) {
+        String jwt = token.substring("Bearer ".length());
+        User user = getUserRepository().findOneByKey(jwt);
+        if (Objects.isNull(user)) {
+            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
+        }
+        return user;
     }
 
     public boolean authenticate(String authToken) {
