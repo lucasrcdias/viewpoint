@@ -29,4 +29,14 @@ public class ActionController {
     public Action create(@Validated @RequestBody ActionDTO dto, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) {
         return getActionService().create(dto, token);
     }
+
+    @RequestMapping(value = "/deleteByGroup", method = RequestMethod.DELETE)
+    public void deleteByGroup(@RequestParam String group, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) {
+         getActionService().deleteAllByGroup(group, token);
+    }
+
+    @RequestMapping(value = "/deleteByName", method = RequestMethod.DELETE)
+    public void deleteByName(@RequestParam String name, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) {
+        getActionService().deleteAllByName(name, token);
+    }
 }
