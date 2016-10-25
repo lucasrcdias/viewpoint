@@ -1,9 +1,7 @@
 package br.com.service;
 
 import br.com.controller.ActionDTO;
-import br.com.exceptions.UserNotFoundException;
 import br.com.model.ActionRepository;
-import br.com.model.UserRepository;
 import br.com.model.entity.Action;
 import br.com.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +16,11 @@ public class ActionService {
     @Autowired
     private ActionRepository actionRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
 
     public Action create(ActionDTO dto, String token) {
-
-        String jwt = token.substring("Bearer ".length());
-        User user = userRepository.findOneByKey(jwt);
-        if (Objects.isNull(user)) {
-            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
-        }
+        User user = userService.findUserByToken(token);
         Action action = new Action();
         action.setUser(user);
         action.setName(dto.getName());
@@ -39,21 +33,13 @@ public class ActionService {
     }
 
     public void deleteAllByGroup(String group, String token) {
-        String jwt = token.substring("Bearer ".length());
-        User user = userRepository.findOneByKey(jwt);
-        if (Objects.isNull(user)) {
-            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
-        }
+        userService.findUserByToken(token);
         List<Action> actions = actionRepository.findAllByGroup(group);
         actionRepository.delete(actions);
     }
 
     public void deleteAllByName(String name, String token) {
-        String jwt = token.substring("Bearer ".length());
-        User user = userRepository.findOneByKey(jwt);
-        if (Objects.isNull(user)) {
-            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
-        }
+        userService.findUserByToken(token);
         List<Action> actions = actionRepository.findAllByName(name);
         actionRepository.delete(actions);
     }
