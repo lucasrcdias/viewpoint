@@ -6,7 +6,7 @@ public class ErrorResponse  {
     private String message;
 
     public ErrorResponse(String field,String message) {
-        this.setField(field);
+        this.field = field;
         this.message = message;
     }
 
