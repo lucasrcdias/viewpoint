@@ -2,7 +2,6 @@ drop database viewpoint;
 create database viewpoint;
 use viewpoint;
 
-
 create table users
 (
 id_user int primary key auto_increment,
@@ -20,5 +19,6 @@ name_action varchar(60) not null,
 created_at datetime not null,
 group_action varchar(60) not null, 
 parameters varchar(100) not null,
+ip_action varchar(40),
 id_usu int references users(id_usu)
 );
