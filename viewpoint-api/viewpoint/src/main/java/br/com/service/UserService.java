@@ -29,7 +29,8 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(password);
         user.setName(name);
-        user.setKey(jwtUtils.generateToken(user));
+        user.setKey(String.valueOf(email.hashCode()));
+        user.setToken(jwtUtils.generateToken(user));
         return getUserRepository().save(user);
     }
 
@@ -43,6 +44,7 @@ public class UserService {
         }
         if (Objects.nonNull(email)) {
             user.setEmail(email);
+            user.setKey(String.valueOf(email.hashCode()));
             user.setKey(jwtUtils.generateToken(user));
         }
         return getUserRepository().save(user);

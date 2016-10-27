@@ -17,7 +17,7 @@ import java.util.Objects;
 @Service
 public class JwtUtils {
 
-    private static final String apiKey = "spring.jwt.sec";
+    private static final String apiKey = "viewpointSecret";
 
     public String generateToken(User user) throws JsonProcessingException {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;

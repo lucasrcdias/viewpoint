@@ -40,9 +40,13 @@ public class User {
 
     @Column(name = "api_key", unique = true, nullable = false)
     @JsonProperty
-    @Length(max = 500)
+    @Length(max = 150)
     @NotEmpty(message = "O campo da chave do usuário não pode ser vazio")
     private String key;
+
+    @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String token;
 
     @Column(name = "created_at", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
@@ -94,5 +98,13 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
