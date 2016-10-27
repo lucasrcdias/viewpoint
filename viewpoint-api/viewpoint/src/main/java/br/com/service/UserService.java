@@ -37,15 +37,15 @@ public class UserService {
     public User update(String email, String password, String name, String token) throws JsonProcessingException {
         User user = tokenValidation(token);
         if (Objects.nonNull(password)) {
-            user.setEmail(password);
+            user.setPassword(password);
         }
         if (Objects.nonNull(name)) {
-            user.setEmail(name);
+            user.setName(name);
         }
         if (Objects.nonNull(email)) {
             user.setEmail(email);
             user.setKey(String.valueOf(email.hashCode()));
-            user.setKey(jwtUtils.generateToken(user));
+            user.setToken(jwtUtils.generateToken(user));
         }
         return getUserRepository().save(user);
     }

@@ -28,7 +28,6 @@ public class BeanConfiguration extends WebMvcConfigurationSupport {
         return new ActionService();
     }
 
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SecurityInterceptor()).addPathPatterns(SECURE_ENDPOINTS);
