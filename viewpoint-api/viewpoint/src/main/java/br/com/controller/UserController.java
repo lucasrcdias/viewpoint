@@ -1,6 +1,8 @@
 package br.com.controller;
 
 import br.com.HeaderParam;
+import br.com.controller.request.UserDTO;
+import br.com.controller.request.UserDataDTO;
 import br.com.model.entity.User;
 import br.com.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,12 +20,14 @@ public class UserController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public User create(@Validated @RequestBody UserDTO userDTO) throws JsonProcessingException {
-        return getUserService().create(userDTO.getEmail(), userDTO.getPassword(), userDTO.getName());
+        UserDataDTO user = userDTO.getUser();
+        return getUserService().create(user.getEmail(), user.getPassword(), user.getName());
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public User update(@RequestBody UserDTO userDTO, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) throws JsonProcessingException {
-        return getUserService().update(userDTO.getEmail(), userDTO.getPassword(), userDTO.getName(), token);
+        UserDataDTO user = userDTO.getUser();
+        return getUserService().update(user.getEmail(), user.getPassword(), user.getName(), token);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)

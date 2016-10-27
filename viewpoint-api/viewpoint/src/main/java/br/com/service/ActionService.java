@@ -1,6 +1,6 @@
 package br.com.service;
 
-import br.com.controller.ActionDTO;
+import br.com.controller.request.ActionDataDTO;
 import br.com.model.ActionRepository;
 import br.com.model.entity.Action;
 import br.com.model.entity.User;
@@ -21,8 +21,8 @@ public class ActionService {
     private UserService userService;
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public Action create(ActionDTO dto, String token) throws JsonProcessingException {
-        User user = userService.findUserByToken(token);
+    public Action create(ActionDataDTO dto, String token) throws JsonProcessingException {
+        User user = userService.getUser(token);
         Action action = new Action();
         action.setUser(user);
         action.setName(dto.getName());
@@ -36,13 +36,13 @@ public class ActionService {
     }
 
     public void deleteAllByGroup(String group, String token) {
-        userService.findUserByToken(token);
+        userService.tokenValidation(token);
         List<Action> actions = actionRepository.findAllByGroup(group);
         actionRepository.delete(actions);
     }
 
     public void deleteAllByName(String name, String token) {
-        userService.findUserByToken(token);
+        userService.tokenValidation(token);
         List<Action> actions = actionRepository.findAllByName(name);
         actionRepository.delete(actions);
     }

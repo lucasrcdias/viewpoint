@@ -1,4 +1,4 @@
-package br.com.controller;
+package br.com.controller.request;
 
 public class ParamDTO {
     private String key;

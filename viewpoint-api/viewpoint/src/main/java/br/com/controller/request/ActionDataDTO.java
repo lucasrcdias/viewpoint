@@ -1,11 +1,11 @@
-package br.com.controller;
+package br.com.controller.request;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.List;
 
-public class ActionDTO {
+public class ActionDataDTO {
 
     @Length(max = 60, message = "O nome do evento deve conter no máximo 60 caracteres")
     @NotEmpty(message = "O preenchimento do nome é obrigatório")
