@@ -51,7 +51,6 @@ public class User implements Serializable {
     private String key;
 
     @Transient
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String token;
 
     @Column(name = "created_at", nullable = false)
