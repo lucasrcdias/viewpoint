@@ -1,9 +1,11 @@
 package br.com.service;
 
-import br.com.BusinessException;
+import br.com.JwtUtils;
+import br.com.exceptions.BusinessException;
+import br.com.exceptions.UserNotFoundException;
 import br.com.model.UserRepository;
 import br.com.model.entity.User;
-import javassist.NotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,44 +17,42 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtUtils jwtUtils;
 
-    public User create(String email, String password, String name) {
+    public User create(String email, String password, String name) throws JsonProcessingException {
         User user = getUserRepository().findOneByEmail(email);
         if (user != null) {
-            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "O e-mail informado já está em uso, utilize o link para recuperação de senha");
+            throw new BusinessException(HttpStatus.ALREADY_REPORTED, "email", "O e-mail informado já está em uso, utilize o link para recuperação de senha");
         }
         user = new User();
-        user.setKey(createKey(email));
         user.setEmail(email);
         user.setPassword(password);
         user.setName(name);
+        user.setKey(String.valueOf(email.hashCode()));
+        user.setToken(jwtUtils.generateToken(user));
         return getUserRepository().save(user);
     }
 
-    public User update(Long id, String email, String password, String name) {
-        User user = getUserRepository().findOne(id);
-        if (user == null) {
-            throw new BusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
+    public User update(String email, String password, String name, String token) throws JsonProcessingException {
+        User user = findUserByToken(token);
+        if (Objects.nonNull(password)) {
+            user.setPassword(password);
+        }
+        if (Objects.nonNull(name)) {
+            user.setName(name);
         }
         if (Objects.nonNull(email)) {
             user.setEmail(email);
-            user.setKey(createKey(email));
-        }
-        if (Objects.nonNull(password)) {
-            user.setEmail(password);
-        }
-        if (Objects.nonNull(name)) {
-            user.setEmail(name);
+            user.setKey(String.valueOf(email.hashCode()));
+            user.setToken(jwtUtils.generateToken(user));
         }
         return getUserRepository().save(user);
     }
 
-    public void delete(Long id) {
-        User userByKey = getUserRepository().findOne(id);
-        if (userByKey == null) {
-            throw new BusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
-        }
-        getUserRepository().delete(userByKey);
+    public void delete(String token) {
+        User user = findUserByToken(token);
+        getUserRepository().delete(user);
     }
 
     private String createKey(String email) {
@@ -73,5 +73,22 @@ public class UserService {
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public User findUserByToken(String token) {
+        String jwt = token.substring("Bearer ".length());
+        User user = getUserRepository().findOneByKey(jwt);
+        if (Objects.isNull(user)) {
+            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
+        }
+        return user;
+    }
+
+    public boolean authenticate(String authToken) {
+        String jwt = authToken.substring("Bearer ".length());
+        if (!jwtUtils.isAuthenticated(jwt)) {
+            throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
+        }
+        return true;
     }
 }
