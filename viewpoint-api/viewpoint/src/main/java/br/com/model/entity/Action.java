@@ -47,7 +47,7 @@ public class Action implements Serializable {
 
     @Column(name = "ip_action")
     @JsonProperty
-    @Length(max = 40, message = "O ip que enviou o evento deve conter no máximo 40 caracteres")
+    @Length(max = 18, message = "O ip que enviou o evento deve conter no máximo 18 caracteres")
     private String ipAddress;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
