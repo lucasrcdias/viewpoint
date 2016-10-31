@@ -12,12 +12,12 @@ public class ActionDataDTO {
     private String name;
 
     @Length(max = 60, message = "O grupo do evento deve conter no máximo 60 caracteres")
-    @NotEmpty(message = "O preenchimento do nome é obrigatório")
+    @NotEmpty(message = "O preenchimento do grupo é obrigatório")
     private String group;
 
     private List<ParamDTO> parameters;
 
-    @Length(max = 40, message = "O ip que enviou o evento deve conter no máximo 40 caracteres")
+    @Length(max = 18, message = "O ip que enviou o evento deve conter no máximo 40 caracteres")
     private String ip;
 
     public String getName() {
