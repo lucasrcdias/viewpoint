@@ -19,6 +19,6 @@ name_action varchar(60) not null,
 created_at datetime not null,
 group_action varchar(60) not null, 
 parameters varchar(100) not null,
-ip_action varchar(40),
+ip_action varchar(18),
 id_usu int references users(id_usu)
 );
