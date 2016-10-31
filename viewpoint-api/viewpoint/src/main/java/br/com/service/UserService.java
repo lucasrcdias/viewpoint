@@ -95,4 +95,8 @@ public class UserService {
         }
         return true;
     }
+
+    public User findOneByKey(String key){
+        return userRepository.findOneByKey(key);
+    }
 }

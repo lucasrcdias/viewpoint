@@ -28,9 +28,9 @@ public class ActionController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Action create(@Validated @RequestBody ActionDTO dto, @RequestHeader(name = HeaderParam.AUTH_TOKEN) String token) throws JsonProcessingException {
+    public Action create(@Validated @RequestBody ActionDTO dto) throws JsonProcessingException {
         ActionDataDTO action = dto.getAction();
-        return getActionService().create(action, token);
+        return getActionService().create(action);
     }
 
     @RequestMapping(value = "/deleteByGroup", method = RequestMethod.DELETE)

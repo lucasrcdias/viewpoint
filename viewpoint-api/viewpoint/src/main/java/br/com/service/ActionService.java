@@ -1,6 +1,7 @@
 package br.com.service;
 
 import br.com.controller.request.ActionDataDTO;
+import br.com.exceptions.UserNotFoundException;
 import br.com.model.ActionRepository;
 import br.com.model.entity.Action;
 import br.com.model.entity.User;
@@ -21,8 +22,11 @@ public class ActionService {
     private UserService userService;
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public Action create(ActionDataDTO dto, String token) throws JsonProcessingException {
-        User user = userService.getUser(token);
+    public Action create(ActionDataDTO dto) throws JsonProcessingException {
+        User user = userService.findOneByKey(dto.getKey());
+        if (Objects.isNull(user)) {
+            throw new UserNotFoundException("key", "Usuário não encontrado pela chave");
+        }
         Action action = new Action();
         action.setUser(user);
         action.setName(dto.getName());
