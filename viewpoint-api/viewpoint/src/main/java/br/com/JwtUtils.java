@@ -37,8 +37,7 @@ public class JwtUtils {
 
     public boolean isAuthenticated(String token) {
         try {
-            Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(apiKey))
-                    .parseClaimsJws(token.trim()).getBody();
+            Claims claims = getClaims(token);
             if (Objects.nonNull(claims)) {
                 return true;
             }
@@ -47,5 +46,10 @@ public class JwtUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static Claims getClaims(String token) {
+        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(apiKey))
+                .parseClaimsJws(token.trim()).getBody();
     }
 }

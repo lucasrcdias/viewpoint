@@ -6,6 +6,7 @@ import br.com.exceptions.UserNotFoundException;
 import br.com.model.UserRepository;
 import br.com.model.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -76,16 +77,17 @@ public class UserService {
     }
 
     public User tokenValidation(String token) {
-        User user = getUser(token);
+        Claims claims = getClaims(token);
+        User user = userRepository.findOneByEmail(claims.getSubject());
         if (Objects.isNull(user)) {
             throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
         }
         return user;
     }
 
-    public User getUser(String token) {
+    public Claims getClaims(String token) {
         String jwt = token.substring("Bearer ".length());
-        return getUserRepository().findOneByKey(jwt);
+        return JwtUtils.getClaims(jwt);
     }
 
     public boolean authenticate(String authToken) {
@@ -96,7 +98,7 @@ public class UserService {
         return true;
     }
 
-    public User findOneByKey(String key){
+    public User findOneByKey(String key) {
         return userRepository.findOneByKey(key);
     }
 }
