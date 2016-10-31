@@ -17,7 +17,7 @@ public class ActionDataDTO {
 
     private List<ParamDTO> parameters;
 
-    @Length(max = 18, message = "O ip que enviou o evento deve conter no máximo 40 caracteres")
+    @Length(max = 18, message = "O ip que enviou o evento deve conter no máximo 18 caracteres")
     private String ip;
 
     public String getName() {
