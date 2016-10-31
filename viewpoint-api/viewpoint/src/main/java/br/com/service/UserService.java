@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
 import java.util.Objects;
 
 @Service
@@ -28,11 +29,34 @@ public class UserService {
         }
         user = new User();
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder(password));
         user.setName(name);
         user.setKey(String.valueOf(email.hashCode()));
         user.setToken(jwtUtils.generateToken(user));
         return getUserRepository().save(user);
+    }
+
+    private String passwordEncoder(String password) {
+        try {
+            MessageDigest algorithm = MessageDigest.getInstance("MD5");
+            byte messageDigest[] = algorithm.digest(password.getBytes("UTF-8"));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) {
+                hexString.append(String.format("%02X", 0xFF & b));
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "password", "Erro ao criptografar senha");
+        }
+    }
+
+    public User login(String email, String password) throws JsonProcessingException {
+        User user = getUserRepository().findOneByEmailAndPassword(email, passwordEncoder(password));
+        if (Objects.isNull(user)) {
+            throw new UserNotFoundException("Login", "Usuário não encontrado pelo email e senha, por favor confira suas credenciais");
+        }
+        user.setToken(jwtUtils.generateToken(user));
+        return user;
     }
 
     public User update(String email, String password, String name, String token) throws JsonProcessingException {
@@ -54,10 +78,6 @@ public class UserService {
     public void delete(String token) {
         User user = tokenValidation(token);
         getUserRepository().delete(user);
-    }
-
-    private String createKey(String email) {
-        return String.valueOf(email.hashCode());
     }
 
     public User findByEmail(String email) {
