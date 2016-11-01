@@ -52,9 +52,9 @@ public class ActionController {
         return getActionService().findAllGroupsByUser(token);
     }
 
-    @RequestMapping(value = "/findAllActionsByUser", method = RequestMethod.GET)
-    public Set<ActionGroup> findAllActionsByUser(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token,
-                                                 @RequestParam(name = "group") String group) {
+    @RequestMapping(value = "/findActionsByGroup", method = RequestMethod.GET)
+    public Set<ActionGroup> findAllActionsByGroup(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token,
+                                                  @RequestParam(name = "group") String group) {
         return getActionService().findAllActionsByUser(token, group);
     }
 }
