@@ -57,7 +57,7 @@ public class ActionService {
     public UserGroup findAllGroupsByUser(String token) {
         User user = userService.tokenValidation(token);
         List<Action> allGroupByUser = actionRepository.findAllGroupByUser(user.getId());
-        List<String> actionsName = allGroupByUser.stream().map(Action::getGroup).collect(Collectors.toList());
+        Set<String> actionsName = allGroupByUser.stream().map(Action::getGroup).collect(Collectors.toSet());
         return new UserGroup(actionsName);
     }
 

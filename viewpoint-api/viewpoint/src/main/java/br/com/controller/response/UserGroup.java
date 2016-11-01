@@ -1,19 +1,19 @@
 package br.com.controller.response;
 
-import java.util.List;
+import java.util.Set;
 
 public class UserGroup {
-    public UserGroup(List<String> groups) {
+    public UserGroup(Set<String> groups) {
         this.setGroups(groups);
     }
 
-    private List<String> groups;
+    private Set<String> groups;
 
-    public List<String> getGroups() {
+    public Set<String> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<String> groups) {
+    public void setGroups(Set<String> groups) {
         this.groups = groups;
     }
 }
