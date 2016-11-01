@@ -3,6 +3,7 @@ package br.com.controller;
 import br.com.HeaderParam;
 import br.com.controller.request.ActionDTO;
 import br.com.controller.request.ActionDataDTO;
+import br.com.controller.response.ActionGroup;
 import br.com.controller.response.UserGroup;
 import br.com.model.entity.Action;
 import br.com.service.ActionService;
@@ -12,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/action", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -52,8 +53,8 @@ public class ActionController {
     }
 
     @RequestMapping(value = "/findAllActionsByUser", method = RequestMethod.GET)
-    public List<Action> findAllActionsByUser(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token,
-                                             @RequestParam(name = "group") String group) {
+    public Set<ActionGroup> findAllActionsByUser(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token,
+                                                 @RequestParam(name = "group") String group) {
         return getActionService().findAllActionsByUser(token, group);
     }
 }

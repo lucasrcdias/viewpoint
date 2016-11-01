@@ -1,6 +1,7 @@
 package br.com.service;
 
 import br.com.controller.request.ActionDataDTO;
+import br.com.controller.response.ActionGroup;
 import br.com.controller.response.UserGroup;
 import br.com.exceptions.UserNotFoundException;
 import br.com.model.ActionRepository;
@@ -11,8 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,8 +61,20 @@ public class ActionService {
         return new UserGroup(actionsName);
     }
 
-    public List<Action> findAllActionsByUser(String token, String group) {
+    public Set<ActionGroup> findAllActionsByUser(String token, String group) {
         User user = userService.tokenValidation(token);
-        return actionRepository.findAllByGroupAndUser(user.getId(), group);
+        List<Action> actions = actionRepository.findAllByGroupAndUser(user.getId(), group);
+        Map<Action, Long> actionsCounted = actions.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<String, List<Map.Entry<Action, Long>>> actionsMap = actionsCounted.entrySet().stream().collect(Collectors.groupingBy(e -> e.getKey().getName()));
+
+        Set<ActionGroup> actionGroups = new HashSet<>();
+        for (String key : actionsMap.keySet()) {
+            List<Map.Entry<Action, Long>> entries = actionsMap.get(key);
+            int size = entries.size();
+            Action action = entries.stream().findFirst().get().getKey();
+            actionGroups.add(new ActionGroup(action.getName(), action.getGroup(), size, action.getCreatedAt()));
+        }
+        return actionGroups;
+
     }
 }
