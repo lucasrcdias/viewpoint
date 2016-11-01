@@ -14,8 +14,9 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
 
     private static final String CREATE_USER = "POST /api/user/create";
-    private static final String[] SKIP_SECURITY = {CREATE_USER};
-    private static final String EMPTY_HEADER_MESSAGE = "Header params {0} should not be null";
+    private static final String CREATE_EVENT = "POST /api/action/create";
+    private static final String[] SKIP_SECURITY = {CREATE_USER, CREATE_EVENT};
+    private static final String EMPTY_HEADER_MESSAGE = "O parâmetro {0} não deveria ser nulo";
 
     @Autowired
     private UserService userService;
@@ -46,7 +47,12 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
     public static Boolean shouldSkipVerification(HttpServletRequest request, String... skipRequests) {
         String url = request.getMethod() + " " + request.getRequestURI();
-        return url.equalsIgnoreCase(skipRequests[0]);
+        for (String skip : skipRequests) {
+            if (url.equalsIgnoreCase(skip)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

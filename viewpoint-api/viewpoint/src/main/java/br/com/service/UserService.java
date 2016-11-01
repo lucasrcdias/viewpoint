@@ -6,6 +6,7 @@ import br.com.exceptions.UserNotFoundException;
 import br.com.model.UserRepository;
 import br.com.model.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class UserService {
     }
 
     public User update(String email, String password, String name, String token) throws JsonProcessingException {
-        User user = findUserByToken(token);
+        User user = tokenValidation(token);
         if (Objects.nonNull(password)) {
             user.setPassword(password);
         }
@@ -51,7 +52,7 @@ public class UserService {
     }
 
     public void delete(String token) {
-        User user = findUserByToken(token);
+        User user = tokenValidation(token);
         getUserRepository().delete(user);
     }
 
@@ -75,13 +76,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User findUserByToken(String token) {
-        String jwt = token.substring("Bearer ".length());
-        User user = getUserRepository().findOneByKey(jwt);
+    public User tokenValidation(String token) {
+        Claims claims = getClaims(token);
+        User user = userRepository.findOneByEmail(claims.getSubject());
         if (Objects.isNull(user)) {
             throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
         }
         return user;
+    }
+
+    public Claims getClaims(String token) {
+        String jwt = token.substring("Bearer ".length());
+        return JwtUtils.getClaims(jwt);
     }
 
     public boolean authenticate(String authToken) {
@@ -90,5 +96,9 @@ public class UserService {
             throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
         }
         return true;
+    }
+
+    public User findOneByKey(String key) {
+        return userRepository.findOneByKey(key);
     }
 }
