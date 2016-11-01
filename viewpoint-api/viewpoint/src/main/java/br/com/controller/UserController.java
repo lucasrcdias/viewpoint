@@ -3,6 +3,8 @@ package br.com.controller;
 import br.com.HeaderParam;
 import br.com.controller.request.UserDTO;
 import br.com.controller.request.UserDataDTO;
+import br.com.controller.request.UserLoginDTO;
+import br.com.controller.request.UserLoginData;
 import br.com.model.entity.User;
 import br.com.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +19,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public User login(@Validated @RequestBody UserLoginDTO userLoginDTO) throws JsonProcessingException {
+        UserLoginData user = userLoginDTO.getUser();
+        return getUserService().login(user.getEmail(), user.getPassword());
+    }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public User create(@Validated @RequestBody UserDTO userDTO) throws JsonProcessingException {

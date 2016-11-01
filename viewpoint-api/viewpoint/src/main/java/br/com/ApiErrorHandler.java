@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,13 +26,15 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                          HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getLocalizedMessage(), ex.getMessage()), status);
+        ErrorResponse errorResponse = new ErrorResponse(ex.getLocalizedMessage(), ex.getMessage());
+        return new ResponseEntity<>(Arrays.asList(errorResponse), status);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getLocalizedMessage(), ex.getMessage()), status);
+        ErrorResponse errorResponse = new ErrorResponse(ex.getLocalizedMessage(), ex.getMessage());
+        return new ResponseEntity<>(Arrays.asList(errorResponse), status);
     }
 
     @Override
@@ -50,29 +53,34 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleConversionNotSupported(ConversionNotSupportedException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getPropertyName(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse(ex.getPropertyName(), ex.getMessage());
+        return new ResponseEntity<>(Arrays.asList(errorResponse), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
                                                         HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getPropertyName(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse(ex.getPropertyName(), ex.getMessage());
+        return new ResponseEntity<>(Arrays.asList(errorResponse), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
             MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getParameterName(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse(ex.getParameterName(), ex.getMessage());
+        return new ResponseEntity<>(Arrays.asList(errorResponse), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<?> handleBusinessException(BusinessException e) {
-        return new ResponseEntity<>(new ErrorResponse(e.getField(), e.getMessage()), e.getStatus());
+        ErrorResponse errorResponse = new ErrorResponse(e.getField(), e.getMessage());
+        return new ResponseEntity<>(Arrays.asList(errorResponse), e.getStatus());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
-        return new ResponseEntity<>(new ErrorResponse("Unexpected error occurred", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponse errorResponse = new ErrorResponse("Unexpected error occurred", e.getMessage());
+        return new ResponseEntity<>(Arrays.asList(errorResponse), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
