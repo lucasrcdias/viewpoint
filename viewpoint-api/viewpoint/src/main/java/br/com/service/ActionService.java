@@ -1,6 +1,7 @@
 package br.com.service;
 
 import br.com.controller.request.ActionDataDTO;
+import br.com.controller.response.UserGroup;
 import br.com.exceptions.UserNotFoundException;
 import br.com.model.ActionRepository;
 import br.com.model.entity.Action;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ActionService {
@@ -40,8 +42,8 @@ public class ActionService {
     }
 
     public void deleteAllByGroup(String group, String token) {
-        userService.tokenValidation(token);
-        List<Action> actions = actionRepository.findAllByGroup(group);
+        User user = userService.tokenValidation(token);
+        List<Action> actions = actionRepository.findAllByGroupAndUser(user.getId(), group);
         actionRepository.delete(actions);
     }
 
@@ -49,5 +51,17 @@ public class ActionService {
         userService.tokenValidation(token);
         List<Action> actions = actionRepository.findAllByName(name);
         actionRepository.delete(actions);
+    }
+
+    public UserGroup findAllGroupsByUser(String token) {
+        User user = userService.tokenValidation(token);
+        List<Action> allGroupByUser = actionRepository.findAllGroupByUser(user.getId());
+        List<String> actionsName = allGroupByUser.stream().map(Action::getGroup).collect(Collectors.toList());
+        return new UserGroup(actionsName);
+    }
+
+    public List<Action> findAllActionsByUser(String token, String group) {
+        User user = userService.tokenValidation(token);
+        return actionRepository.findAllByGroupAndUser(user.getId(), group);
     }
 }

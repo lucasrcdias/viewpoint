@@ -50,7 +50,7 @@ public class UserController {
 
     @RequestMapping(value = "/findByEmail", method = RequestMethod.GET)
     public User findByEmail(@RequestParam(required = true) String email) {
-        return getUserService().findByEmail(email);
+        return getUserService().findOneByEmail(email);
     }
 
     public UserService getUserService() {

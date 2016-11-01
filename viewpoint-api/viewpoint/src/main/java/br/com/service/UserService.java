@@ -80,7 +80,7 @@ public class UserService {
         getUserRepository().delete(user);
     }
 
-    public User findByEmail(String email) {
+    public User findOneByEmail(String email) {
         return getUserRepository().findOneByEmail(email);
     }
 
@@ -97,17 +97,20 @@ public class UserService {
     }
 
     public User tokenValidation(String token) {
-        Claims claims = getClaims(token);
-        User user = userRepository.findOneByEmail(claims.getSubject());
+        User user = getUserByClaims(token);
         if (Objects.isNull(user)) {
             throw new UserNotFoundException("Authorization", "Usuário não encontrado pela chave");
         }
         return user;
     }
 
-    public Claims getClaims(String token) {
+    private User getUserByClaims(String token) {
         String jwt = token.substring("Bearer ".length());
-        return JwtUtils.getClaims(jwt);
+        Claims claims = JwtUtils.getClaims(jwt);
+        if (claims.getSubject() != null) {
+            return userRepository.findOneByEmail(claims.getSubject());
+        }
+        return null;
     }
 
     public boolean authenticate(String authToken) {
