@@ -133,7 +133,7 @@ public class UserService {
             throw new UserNotFoundException("Email", "Usuário não encontrado pelo email");
         }
 
-        String newPassword = RandomStringUtils.randomAlphabetic(64);
+        String newPassword = RandomStringUtils.randomAlphabetic(16);
         user = updatePassword(user, newPassword);
 
         String emailMessage = "Olá " + user.getName() + ", foi solicitada uma nova senha para o email: " + user.getEmail() +
