@@ -136,8 +136,8 @@ public class UserService {
         String newPassword = RandomStringUtils.randomAlphabetic(16);
         user = updatePassword(user, newPassword);
 
-        String emailMessage = "Olá " + user.getName() + ", foi solicitada uma nova senha para o email: " + user.getEmail() +
-                ", Sua nova senha é: " + newPassword;
+        String emailMessage = "Olá " + user.getName() + ", foi solicitada uma nova senha para o email: "
+                + user.getEmail() + ", Sua nova senha é: " + newPassword;
         SendEmailService.sendEmail(user.getEmail(), user.getName(), "Solicitação de Recuperação de Senha", emailMessage);
     }
 
