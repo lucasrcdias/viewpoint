@@ -77,8 +77,4 @@ public class ActionService {
         return actionGroups;
 
     }
-
-    public void passwordRecover(){
-
-    }
 }

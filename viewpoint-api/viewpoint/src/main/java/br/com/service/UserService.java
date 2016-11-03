@@ -7,6 +7,8 @@ import br.com.model.UserRepository;
 import br.com.model.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -124,4 +126,24 @@ public class UserService {
     public User findOneByKey(String key) {
         return userRepository.findOneByKey(key);
     }
+
+    public void passwordRecover(String email) throws EmailException {
+        User user = findOneByEmail(email);
+        if (Objects.isNull(user)) {
+            throw new UserNotFoundException("Email", "Usuário não encontrado pelo email");
+        }
+
+        String newPassword = RandomStringUtils.randomAlphabetic(64);
+        user = updatePassword(user, newPassword);
+
+        String emailMessage = "Olá " + user.getName() + ", foi solicitada uma nova senha para o email: " + user.getEmail() +
+                ", Sua nova senha é: " + newPassword;
+        SendEmailService.sendEmail(user.getEmail(), user.getName(), "Solicitação de Recuperação de Senha", emailMessage);
+    }
+
+    private User updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder(newPassword));
+        return userRepository.save(user);
+    }
+
 }
