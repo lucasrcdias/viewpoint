@@ -54,9 +54,9 @@ public class UserController {
         return getUserService().findOneByEmail(email);
     }
 
-    @RequestMapping(value = "/passwordRecover", method = RequestMethod.POST)
-    public void passwordRecover(@RequestParam(required = true) String email) throws EmailException {
-        getUserService().passwordRecover(email);
+    @RequestMapping(value = "/passwordRecovery", method = RequestMethod.POST)
+    public void passwordRecovery(@RequestParam(required = true) String email) throws EmailException {
+        getUserService().passwordRecovery(email);
     }
 
     public UserService getUserService() {

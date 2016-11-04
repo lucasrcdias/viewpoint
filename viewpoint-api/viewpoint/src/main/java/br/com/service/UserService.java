@@ -127,7 +127,7 @@ public class UserService {
         return userRepository.findOneByKey(key);
     }
 
-    public void passwordRecover(String email) throws EmailException {
+    public void passwordRecovery(String email) throws EmailException {
         User user = findOneByEmail(email);
         if (Objects.isNull(user)) {
             throw new UserNotFoundException("Email", "Usuário não encontrado pelo email");

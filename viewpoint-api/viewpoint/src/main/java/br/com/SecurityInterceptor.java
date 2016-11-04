@@ -15,9 +15,9 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
     private static final String CREATE_USER = "POST /api/user/create";
     private static final String CREATE_EVENT = "POST /api/action/create";
-    private static final String PASSWORD_RECOVER = "POST /api/user/passwordRecover";
+    private static final String PASSWORD_RECOVERY = "POST /api/user/passwordRecovery";
     private static final String LOGIN_USER = "POST /api/user/login";
-    private static final String[] SKIP_SECURITY = {CREATE_USER, CREATE_EVENT, LOGIN_USER, PASSWORD_RECOVER};
+    private static final String[] SKIP_SECURITY = {CREATE_USER, CREATE_EVENT, LOGIN_USER, PASSWORD_RECOVERY};
     private static final String EMPTY_HEADER_MESSAGE = "O parâmetro {0} não deveria ser nulo";
 
     @Autowired
