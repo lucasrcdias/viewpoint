@@ -62,7 +62,7 @@ public class ActionService {
         return new UserGroup(actionsName);
     }
 
-    public Set<ActionGroup> findAllActionsByUser(String token, String group) {
+    public List<ActionGroup> findAllActionsByUser(String token, String group) {
         User user = userService.tokenValidation(token);
         List<Action> actions = actionRepository.findAllByGroupAndUser(user.getId(), group);
         Map<Action, Long> actionsCounted = actions.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -76,8 +76,8 @@ public class ActionService {
             actionGroups.add(new ActionGroup(action.getName(), action.getGroup(), size, action.getCreatedAt()));
         }
         //ordenando
-        Set<ActionGroup> sorted = actionGroups.stream()
-                .sorted((p1, p2) -> p1.getTotal().compareTo(p2.getTotal())).collect(Collectors.toSet());
+        List<ActionGroup> sorted = actionGroups.stream()
+                .sorted((p1, p2) -> p1.getTotal().compareTo(p2.getTotal())).collect(Collectors.toList());
         return sorted;
 
     }
