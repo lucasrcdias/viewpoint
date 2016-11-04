@@ -77,7 +77,7 @@ public class ActionService {
         }
         //ordenando
         List<ActionGroup> sorted = actionGroups.stream()
-                .sorted((p1, p2) -> p1.getTotal().compareTo(p2.getTotal())).collect(Collectors.toList());
+                .sorted((p1, p2) -> p1.getTotal().compareTo(p2.getTotal())).distinct().collect(Collectors.toList());
         return sorted;
 
     }
