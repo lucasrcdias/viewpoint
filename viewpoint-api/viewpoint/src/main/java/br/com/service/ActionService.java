@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,11 +71,14 @@ public class ActionService {
         Set<ActionGroup> actionGroups = new HashSet<>();
         for (String key : actionsMap.keySet()) {
             List<Map.Entry<Action, Long>> entries = actionsMap.get(key);
-            int size = entries.size();
+            Integer size = entries.size();
             Action action = entries.stream().findFirst().get().getKey();
             actionGroups.add(new ActionGroup(action.getName(), action.getGroup(), size, action.getCreatedAt()));
         }
-        return actionGroups;
+        //ordenando
+        Set<ActionGroup> sorted = actionGroups.stream()
+                .sorted((p1, p2) -> p1.getTotal().compareTo(p2.getTotal())).collect(Collectors.toSet());
+        return sorted;
 
     }
 }
