@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +62,7 @@ public class ActionService {
         return new UserGroup(actionsName);
     }
 
-    public Set<ActionGroup> findAllActionsByUser(String token, String group) {
+    public List<ActionGroup> findAllActionsByUser(String token, String group) {
         User user = userService.tokenValidation(token);
         List<Action> actions = actionRepository.findAllByGroupAndUser(user.getId(), group);
         Map<Action, Long> actionsCounted = actions.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -70,11 +71,14 @@ public class ActionService {
         Set<ActionGroup> actionGroups = new HashSet<>();
         for (String key : actionsMap.keySet()) {
             List<Map.Entry<Action, Long>> entries = actionsMap.get(key);
-            int size = entries.size();
+            Integer size = entries.size();
             Action action = entries.stream().findFirst().get().getKey();
             actionGroups.add(new ActionGroup(action.getName(), action.getGroup(), size, action.getCreatedAt()));
         }
-        return actionGroups;
+        //ordenando
+        List<ActionGroup> sorted = actionGroups.stream()
+                .sorted((p1, p2) -> p2.getTotal().compareTo(p1.getTotal())).distinct().collect(Collectors.toList());
+        return sorted;
 
     }
 }

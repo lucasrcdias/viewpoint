@@ -8,6 +8,7 @@ import br.com.controller.request.UserLoginData;
 import br.com.model.entity.User;
 import br.com.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -51,6 +52,11 @@ public class UserController {
     @RequestMapping(value = "/findByEmail", method = RequestMethod.GET)
     public User findByEmail(@RequestParam(required = true) String email) {
         return getUserService().findOneByEmail(email);
+    }
+
+    @RequestMapping(value = "/passwordRecovery", method = RequestMethod.POST)
+    public void passwordRecovery(@RequestParam(required = true) String email) throws EmailException {
+        getUserService().passwordRecovery(email);
     }
 
     public UserService getUserService() {

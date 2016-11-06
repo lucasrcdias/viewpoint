@@ -7,11 +7,11 @@ import java.util.Date;
 public class ActionGroup {
     private String name;
     private String group;
-    private long total;
+    private Integer total;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     private Date createdAt;
 
-    public ActionGroup(String name, String group, long total, Date createAt) {
+    public ActionGroup(String name, String group, Integer total, Date createAt) {
         this.name = name;
         this.group = group;
         this.total = total;
@@ -34,11 +34,11 @@ public class ActionGroup {
         this.group = group;
     }
 
-    public long getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 

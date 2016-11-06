@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/action", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +53,7 @@ public class ActionController {
     }
 
     @RequestMapping(value = "/findActionsByGroup", method = RequestMethod.GET)
-    public Set<ActionGroup> findAllActionsByGroup(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token,
+    public List<ActionGroup> findAllActionsByGroup(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token,
                                                   @RequestParam(name = "group") String group) {
         return getActionService().findAllActionsByUser(token, group);
     }
