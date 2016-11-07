@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -32,9 +33,9 @@ public class ActionController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Action create(@Validated @RequestBody ActionDTO dto) throws JsonProcessingException {
+    public Action create(@Validated @RequestBody ActionDTO dto, HttpServletRequest request) throws JsonProcessingException {
         ActionDataDTO action = dto.getAction();
-        return getActionService().create(action);
+        return getActionService().create(action, request.getRemoteAddr());
     }
 
     @RequestMapping(value = "/deleteByGroup", method = RequestMethod.DELETE)

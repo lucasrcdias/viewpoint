@@ -17,9 +17,6 @@ public class ActionDataDTO {
 
     private List<ParamDTO> parameters;
 
-    @Length(max = 18, message = "O ip que enviou o evento deve conter no máximo 18 caracteres")
-    private String ip;
-
     @NotEmpty(message = "a chave do usuário não pode ser vazia")
     private String key;
 
@@ -45,14 +42,6 @@ public class ActionDataDTO {
 
     public void setParameters(List<ParamDTO> parameters) {
         this.parameters = parameters;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
     }
 
     public String getKey() {

@@ -9,12 +9,12 @@ import br.com.model.entity.Action;
 import br.com.model.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +26,7 @@ public class ActionService {
     private UserService userService;
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public Action create(ActionDataDTO dto) throws JsonProcessingException {
+    public Action create(ActionDataDTO dto, String ipAddress) throws JsonProcessingException {
         User user = userService.findOneByKey(dto.getKey());
         if (Objects.isNull(user)) {
             throw new UserNotFoundException("key", "Usuário não encontrado pela chave");
@@ -35,7 +35,9 @@ public class ActionService {
         action.setUser(user);
         action.setName(dto.getName());
         action.setGroup(dto.getGroup());
-        action.setIpAddress(dto.getIp());
+        if(!StringUtils.isBlank(ipAddress)){
+            action.setIpAddress(ipAddress);
+        }
         if (Objects.nonNull(dto.getParameters())) {
             String json = objectMapper.writeValueAsString(dto.getParameters());
             action.setParameters(json);
