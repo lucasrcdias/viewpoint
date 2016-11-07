@@ -35,7 +35,11 @@ public class ActionController {
     @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Action create(@Validated @RequestBody ActionDTO dto, HttpServletRequest request) throws JsonProcessingException {
         ActionDataDTO action = dto.getAction();
-        return getActionService().create(action, request.getRemoteAddr());
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null) {
+            ipAddress = request.getRemoteAddr();
+        }
+        return getActionService().create(action, ipAddress);
     }
 
     @RequestMapping(value = "/deleteByGroup", method = RequestMethod.DELETE)
@@ -55,7 +59,7 @@ public class ActionController {
 
     @RequestMapping(value = "/findActionsByGroup", method = RequestMethod.GET)
     public List<ActionGroup> findAllActionsByGroup(@RequestHeader(name = HeaderParam.AUTH_TOKEN) String token,
-                                                  @RequestParam(name = "group") String group) {
+                                                   @RequestParam(name = "group") String group) {
         return getActionService().findAllActionsByUser(token, group);
     }
 }
